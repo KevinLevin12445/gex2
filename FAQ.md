@@ -1,333 +1,336 @@
-# FAQ
+# FAQ — Preguntas Frecuentes
 
-*[English version](FAQ.en.md)*
+*[Version française](FAQ.fr.md)* · *[English version](FAQ.en.md)*
 
-Tout ce qu'il faut savoir pour comprendre les données affichées et faire
-tourner sa propre instance.
-
----
-
-## Les données
-
-### D'où viennent les données ?
-
-De l'endpoint public **delayed de CBOE**, l'opérateur des marchés d'options
-américains. C'est la source officielle des chaînes SPX et NDX : prix bid/ask,
-volatilité implicite, open interest et volume, pour chaque strike et chaque
-échéance.
-
-**Aucun compte, aucune clé, aucun abonnement.** Le dashboard interroge
-directement l'endpoint public, gratuitement.
-
-### Pourquoi un délai de 15 minutes ?
-
-C'est le délai de la source gratuite et publique de CBOE. *Rediffuser* du
-temps réel exigerait une licence professionnelle coûteuse — mais pour un usage
-personnel, un compte courtier suffit (voir
-[Temps réel via un compte courtier](#temps-réel-via-un-compte-courtier-gratuit-avec-le-compte)).
-
-**En pratique, ça compte beaucoup moins qu'on l'imagine** : la métrique
-centrale de tout l'outil — l'open interest — n'est publiée **qu'une fois par
-jour**, le matin, par l'OCC. Les murs de gamma, le Gamma Flip et les niveaux
-clés reposent dessus et bougent donc très peu en séance. Le délai n'affecte
-réellement que le prix spot de référence et le flux intraday.
-
-### À quelle fréquence les données se rafraîchissent-elles ?
-
-Le feed CBOE est régénéré environ toutes les **60 secondes**, et le dashboard
-le sollicite au même rythme pendant les heures de marché (9h30–16h15 heure de
-New York). En dehors, il se met en veille et affiche le dernier état connu.
-
-### Pourquoi l'onglet « Positionnement » est-il souvent vide ?
-
-Parce qu'il compare l'open interest d'une séance à l'autre, et que l'OI n'est
-publié qu'une fois par jour. Tant que la publication du matin n'a pas eu lieu,
-la comparaison n'a rien à montrer. Cet onglet devient exploitable après
-quelques jours de collecte.
-
-### Les niveaux sont-ils en points d'indice ou en futures ?
-
-Les deux, au choix. Le sélecteur **Indice / ES** (ou NQ) bascule l'affichage.
-
-C'est important : l'écart entre l'indice et son future n'est pas négligeable
-(de l'ordre de +30 points sur ES, +150 sur NQ). Reporter un niveau SPX brut sur
-un chart ES fausserait tout. Le basis est recalculé à chaque rafraîchissement à
-partir de la parité call-put, et suit automatiquement le roll trimestriel.
+Todo lo que necesitas saber para entender los datos mostrados y ejecutar
+tu propia instancia.
 
 ---
 
-## Faire tourner sa propre instance
+## Los Datos
 
-### Pourquoi ne puis-je pas simplement utiliser ton dashboard ?
+### ¿De dónde vienen los datos?
 
-Deux raisons, et la première est la plus simple : **tu n'en as pas besoin**. La
-source CBOE est gratuite et sans compte — ton instance affichera exactement les
-mêmes données.
+Del endpoint público **delayed de CBOE**, el operador de los mercados de opciones
+estadounidenses. Es la fuente oficial de las cadenas SPX y NDX: precios bid/ask,
+volatilidad implícita, open interest y volumen, para cada strike y cada
+vencimiento.
 
-La seconde tient à la licence. Si une instance est enrichie de données
-optionnelles (Databento, ou un flux courtier temps réel), celles-ci sont sous
-licence *usage personnel, non redistribuable*. Les partager reviendrait à les
-rediffuser, ce qui est interdit et ferait basculer l'exploitant dans la
-catégorie « professionnel », avec les tarifs correspondants.
+**Sin cuenta, sin clave, sin suscripción.** El dashboard consulta
+directamente el endpoint público, gratuitamente.
 
-D'où le principe : **le code est partagé, pas les données.**
+### ¿Por qué un retraso de 15 minutos?
 
-### Comment j'installe ?
+Es el retraso de la fuente gratuita y pública de CBOE. *Redistribuir* datos en
+tiempo real exigiría una licencia profesional costosa — pero para uso
+personal, una cuenta de broker es suficiente (ver
+[Tiempo real vía cuenta de broker](#tiempo-real-vía-cuenta-de-broker-gratuito-con-la-cuenta)).
 
-Il faut Python 3.11 ou plus récent, et Git.
+**En la práctica, importa mucho menos de lo que se imagina**: la métrica
+central de toda la herramienta — el open interest — solo se publica **una vez por
+día**, por la mañana, por la OCC. Los muros de gamma, el Gamma Flip y los niveles
+clave se basan en él y por tanto se mueven muy poco durante la sesión. El retraso solo afecta
+realmente al precio spot de referencia y al flujo intradía.
+
+### ¿Con qué frecuencia se actualizan los datos?
+
+El feed CBOE se regenera aproximadamente cada **60 segundos**, y el dashboard
+lo consulta al mismo ritmo durante las horas de mercado (9h30–16h15 hora de
+Nueva York). Fuera de ese horario, se pone en espera y muestra el último estado conocido.
+
+### ¿Por qué la pestaña «Posicionamiento» suele estar vacía?
+
+Porque compara el open interest de una sesión a otra, y el OI solo se
+publica una vez al día. Mientras la publicación de la mañana no haya tenido lugar,
+la comparación no tiene nada que mostrar. Esta pestaña se vuelve útil después de
+algunos días de recolección.
+
+### ¿Los niveles están en puntos de índice o de futuros?
+
+Ambos, a elección. El selector **Índice / ES** (o NQ) cambia la visualización.
+
+Es importante: la diferencia entre el índice y su futuro no es despreciable
+(del orden de +30 puntos en ES, +150 en NQ). Reportar un nivel SPX bruto sobre
+un gráfico ES falsearía todo. El basis se recalcula en cada actualización a
+partir de la paridad call-put, y sigue automáticamente el roll trimestral.
+
+---
+
+## Ejecutar tu propia instancia
+
+### ¿Por qué no puedo simplemente usar tu dashboard?
+
+Dos razones, y la primera es la más simple: **no lo necesitas**. La
+fuente CBOE es gratuita y sin cuenta — tu instancia mostrará exactamente los
+mismos datos.
+
+La segunda tiene que ver con la licencia. Si una instancia se enriquece con datos
+opcionales (Databento, o un flujo de broker en tiempo real), estos están bajo
+licencia de *uso personal, no redistribuible*. Compartirlos equivaldría a
+redistribuirlos, lo cual está prohibido y convertiría al operador en la
+categoría «profesional», con las tarifas correspondientes.
+
+De ahí el principio: **el código se comparte, los datos no.**
+
+### ¿Cómo instalo?
+
+Se necesita Python 3.11 o más reciente, y Git.
 
 ```
-git clone https://github.com/Darthreign/gex-dashboard.git
-cd gex-dashboard
+git clone https://github.com/KevinLevin12445/gex.git
+cd gex
 python -m venv .venv
 ```
 
-Puis, selon le système :
+Luego, según el sistema:
 
 ```
 .venv\Scripts\pip install -r requirements.txt      # Windows
 .venv/bin/pip install -r requirements.txt          # macOS / Linux
 ```
 
-### Comment je lance ?
+### ¿Cómo inicio?
 
 ```
 .venv\Scripts\python run.py       # Windows
 .venv/bin/python run.py           # macOS / Linux
 ```
 
-Puis ouvrir **http://127.0.0.1:8050** dans un navigateur.
+O directamente haciendo doble clic en:
+`dist\GEX_Dashboard\GEX_Dashboard.exe`
 
-Aucune configuration n'est nécessaire : le dashboard commence à collecter
-immédiatement. L'interface est en français ou en anglais, détectée depuis la
-langue du navigateur et modifiable par le sélecteur FR/EN.
+Luego abrir **http://127.0.0.1:8050** en un navegador.
 
-### Dois-je le laisser tourner en permanence ?
+No se necesita configuración: el dashboard comienza a recolectar
+inmediatamente. La interfaz está en español, francés o inglés, detectada desde el
+idioma del navegador y modificable con el selector ES/FR/EN.
 
-Non — mais avec une nuance.
+### ¿Debo dejarlo funcionando permanentemente?
 
-Les **niveaux** (GEX, murs, Gamma Flip, HVL) sont des photos de l'état actuel :
-ils se reconstruisent intégralement au premier rafraîchissement, quel que soit
-le temps d'arrêt. Rien à rattraper.
+No — pero con un matiz.
 
-Le **flux delta intraday**, lui, se mesure entre deux relevés successifs : il ne
-peut être capté que si le programme tourne pendant la séance. Idem pour
-l'historique des niveaux, qui s'accumule au fil du temps.
+Los **niveles** (GEX, muros, Gamma Flip, HVL) son fotos del estado actual:
+se reconstruyen íntegramente en la primera actualización, sin importar el
+tiempo de inactividad. Nada que recuperar.
 
-En pratique : lance-le avant l'ouverture des marchés US les jours où tu
-travailles. Hors séance, il se met en veille et ne consomme rien.
+El **flujo delta intradía**, en cambio, se mide entre dos muestreos sucesivos: solo puede
+captarse si el programa está corriendo durante la sesión. Lo mismo para
+el historial de niveles, que se acumula con el tiempo.
 
-### Mes données restent-elles chez moi ?
+En la práctica: inícialo antes de la apertura del mercado US los días que
+trabajes. Fuera de sesión, se pone en espera y no consume nada.
 
-Oui, entièrement. Tout est stocké en local dans le dossier `data/` (format
-Parquet). Rien n'est envoyé nulle part — le dashboard n'écoute que sur
-`127.0.0.1`, c'est-à-dire ta propre machine.
+### ¿Mis datos se quedan en mi máquina?
+
+Sí, completamente. Todo se almacena localmente en la carpeta `data/` (formato
+Parquet). Nada se envía a ningún lado — el dashboard solo escucha en
+`127.0.0.1`, es decir, tu propia máquina.
 
 ---
 
-## Partager le verdict — le bot Discord
+## Compartir el veredicto — el bot de Discord
 
-### Puis-je partager mes analyses avec des amis sans leur donner accès aux données ?
+### ¿Puedo compartir mis análisis con amigos sin darles acceso a los datos?
 
-Oui, c'est exactement le rôle du **bot Discord** livré dans `discord_bot/`. Il
-relaie dans un salon le **verdict** d'état du gamma — la conclusion, pas la
-donnée. Tes amis voient « Gamma négatif sur le Nasdaq, contrarien risqué »
-**sans compte courtier ni accès aux chaînes d'options**.
+Sí, es exactamente el rol del **bot de Discord** incluido en `discord_bot/`. Transmite
+en un canal el **veredicto** del estado del gamma — la conclusión, no el
+dato. Tus amigos ven «Gamma negativo en el Nasdaq, contrarian arriesgado»
+**sin cuenta de broker ni acceso a las cadenas de opciones**.
 
-Techniquement, le bot n'interroge que l'API locale du dashboard
-(`/api/v1/digest`), qui ne renvoie que des **analyses dérivées** : signes,
-verdict, couleur, et graphiques d'agrégats. Jamais le flux brut par contrat.
-C'est ce qui rend le partage compatible avec un flux sous licence personnelle —
-tu partages une conclusion que *tu* produis, pas une rediffusion.
+Técnicamente, el bot solo consulta la API local del dashboard
+(`/api/v1/digest`), que solo devuelve **análisis derivados**: signos,
+veredicto, color, y gráficos agregados. Nunca el flujo bruto por contrato.
+Es lo que hace que compartir sea compatible con un flujo bajo licencia personal —
+compartes una conclusión que *tú* produces, no una redistribución.
 
-### Comment le bot décide-t-il la couleur du verdict ?
+### ¿Cómo decide el bot el color del veredicto?
 
-Il ne compte pas les symboles à égalité. SPX, SPY et ES sont trois vues du même
-S&P 500 ; NDX, QQQ et NQ du même Nasdaq — les compter séparément reviendrait à
-compter trois fois le même sous-jacent. Le verdict raisonne donc par **famille
-indépendante** :
+No cuenta los símbolos por igual. SPX, SPY y ES son tres vistas del mismo
+S&P 500; NDX, QQQ y NQ del mismo Nasdaq — contarlos por separado equivaldría a
+contar tres veces el mismo subyacente. El veredicto razona por **familia
+independiente**:
 
-- Chaque famille (**S&P** : SPX/SPY/ES — **Nasdaq** : NDX/QQQ/NQ) agrège
-  l'intensité de ses symboles avec des poids : **indice cash > ETF > future**.
-  Un future négatif ne renverse pas le signal de l'indice cash.
-- L'indice cash (SPX, NDX) est l'**indice principal** : s'il passe en *fort*
-  gamma négatif, toute sa famille l'est.
-- Couleur : 🔴 **rouge** si les 2 familles sont négatives ou une en fort
-  négatif · 🟠 **orange** si 1 famille négative ou VIX au-dessus du seuil ·
-  🟢 **vert** sinon.
+- Cada familia (**S&P**: SPX/SPY/ES — **Nasdaq**: NDX/QQQ/NQ) agrega
+  la intensidad de sus símbolos con pesos: **índice cash > ETF > futuro**.
+  Un futuro negativo no revierte la señal del índice cash.
+- El índice cash (SPX, NDX) es el **índice principal**: si pasa a *fuerte*
+  gamma negativo, toda su familia lo es.
+- Color: 🔴 **rojo** si las 2 familias son negativas o una en fuerte
+  negativo · 🟠 **naranja** si 1 familia negativa o VIX por encima del umbral ·
+  🟢 **verde** en caso contrario.
 
-Le digest affiche aussi une **confiance** (forte / moyenne / faible) selon la
-couverture des données — un verdict appuyé sur les 3 symboles concordants d'une
-famille vaut mieux qu'un verdict sur un seul.
+El digest también muestra una **confianza** (alta / media / baja) según la
+cobertura de los datos — un veredicto apoyado en los 3 símbolos concordantes de una
+familia vale más que un veredicto sobre uno solo.
 
-### Quelles commandes le bot comprend-il ?
+### ¿Qué comandos entiende el bot?
 
-`!help` (la liste), `!etat`/`!gamma` (le digest complet), `!gamma NQ` (les
-valeurs calculées d'un symbole), `!niveaux NQ` (les niveaux GEX en texte, avec
-transposition d'échelle : `!niveaux NDX NQ` sort les niveaux NDX en prix NQ), et
-n'importe quel graphique en image (`!heatmap NQ`, `!delta SPX`, `!vanna SPX`…).
-Il poste aussi tout seul à heures fixes et à chaque changement de régime en
-séance, en restant silencieux le week-end. Mise en place :
+`!help` (la lista), `!estado`/`!gamma` (el digest completo), `!gamma NQ` (los
+valores calculados de un símbolo), `!niveles NQ` (los niveles GEX en texto, con
+transposición de escala: `!niveles NDX NQ` muestra los niveles NDX en precios NQ), y
+cualquier gráfico como imagen (`!heatmap NQ`, `!delta SPX`, `!vanna SPX`…).
+También publica solo a horas fijas y en cada cambio de régimen durante la
+sesión, manteniéndose silencioso los fines de semana. Configuración:
 [`discord_bot/README.md`](discord_bot/README.md).
 
 ---
 
-## Comprendre les indicateurs
+## Entender los Indicadores
 
 ### GEX (Gamma Exposure)
 
-Estimation du gamma que les teneurs de marché doivent couvrir, exprimée en
-**dollars par mouvement de 1 %** de l'indice. Calculée strike par strike à
-partir de l'open interest et du gamma Black-Scholes.
+Estimación del gamma que los creadores de mercado deben cubrir, expresada en
+**dólares por movimiento de 1 %** del índice. Calculada strike por strike a
+partir del open interest y del gamma Black-Scholes.
 
-- **GEX net positif** → régime *stabilisant*. Les teneurs de marché vendent
-  dans la hausse et achètent dans la baisse : la volatilité est amortie.
-- **GEX net négatif** → régime *déstabilisant*. Ils font l'inverse, ce qui
-  amplifie les mouvements.
+- **GEX neto positivo** → régimen *estabilizador*. Los creadores de mercado venden
+  en la subida y compran en la bajada: la volatilidad se amortigua.
+- **GEX neto negativo** → régimen *desestabilizador*. Hacen lo contrario, lo que
+  amplifica los movimientos.
 
-### Gamma Flip (ou Zero Gamma)
+### Gamma Flip (o Zero Gamma)
 
-Le niveau de prix où le GEX net **change de signe** — la frontière entre les
-deux régimes ci-dessus. C'est la métrique la plus suivie de toute l'analyse
+El nivel de precio donde el GEX neto **cambia de signo** — la frontera entre los
+dos regímenes anteriores. Es la métrica más seguida de todo el análisis
 gamma.
 
-Il n'est pas simplement lu sur le graphique : le profil complet est recalculé
-sur une grille de prix hypothétiques (visible dans l'onglet **Gamma Profile**),
-puis le croisement est interpolé.
+No se lee simplemente del gráfico: el perfil completo se recalcula
+sobre una grilla de precios hipotéticos (visible en la pestaña **Gamma Profile**),
+luego el cruce se interpola.
 
 ### HVL (High Volatility Level)
 
-Même calcul que le Gamma Flip, mais pondéré par le **volume du jour** plutôt
-que par l'open interest. Là où le Flip décrit la structure héritée, le HVL
-reflète ce qui se traite — et donc se couvre — aujourd'hui.
+Mismo cálculo que el Gamma Flip, pero ponderado por el **volumen del día** en lugar
+del open interest. Donde el Flip describe la estructura heredada, el HVL
+refleja lo que se negocia — y por tanto se cubre — hoy.
 
-Un écart marqué entre les deux est en soi une information sur l'orientation du
-flux de la séance.
+Una diferencia marcada entre ambos es en sí misma una información sobre la orientación del
+flujo de la sesión.
 
-### Call Wall et Put Support
+### Call Wall y Put Support
 
-Les concentrations de gamma les plus fortes, **contraintes directionnellement** :
+Las concentraciones de gamma más fuertes, **restringidas direccionalmente**:
 
-- **Call Wall** : le plus gros mur de calls **au-dessus** du prix — résistance.
-- **Put Support** : le plus gros mur de puts **en dessous** — support.
+- **Call Wall**: el muro de calls más grande **por encima** del precio — resistencia.
+- **Put Support**: el muro de puts más grande **por debajo** — soporte.
 
-Cette contrainte n'est pas cosmétique. Le plus gros mur de puts en valeur
-absolue peut très bien se situer au-dessus du prix, auquel cas l'appeler
-« support » n'aurait aucun sens.
+Esta restricción no es cosmética. El muro de puts más grande en valor
+absoluto puede estar por encima del precio, en cuyo caso llamarlo
+«soporte» no tendría sentido.
 
-### 1D Min et 1D Max
+### 1D Min y 1D Max
 
-Les bornes du mouvement attendu sur l'échéance la plus proche, déduites du prix
-du **straddle à la monnaie**. Le straddle *est* l'estimation de mouvement par le
-marché lui-même — aucune hypothèse de modèle n'intervient.
+Los límites del movimiento esperado en el vencimiento más cercano, deducidos del precio
+del **straddle at-the-money**. El straddle *es* la estimación de movimiento del
+mercado mismo — ninguna hipótesis de modelo interviene.
 
-### GEX1 à GEX5
+### GEX1 a GEX5
 
-Les cinq strikes au gamma le plus important en valeur absolue, sans contrainte
-de direction. Ce sont les murs bruts, classés par poids. La case **Major Walls
-seulement** filtre ceux qui pèsent moins de 25 % du plus fort.
+Los cinco strikes con el gamma más importante en valor absoluto, sin restricción
+de dirección. Son los muros brutos, clasificados por peso. La casilla **Solo Major Walls**
+filtra los que pesan menos del 25 % del más fuerte.
 
 ### DEX (Delta Exposure)
 
-L'équivalent du GEX pour le delta : l'exposition directionnelle que les teneurs
-de marché portent à chaque strike.
+El equivalente del GEX para el delta: la exposición direccional que los creadores
+de mercado mantienen en cada strike.
 
-### Vanna et Charm (onglet dédié)
+### Vanna y Charm (pestaña dedicada)
 
-Les grecques de second ordre, qui expliquent des flux de couverture que le
-gamma seul ne capture pas :
+Las griegas de segundo orden, que explican flujos de cobertura que el
+gamma solo no captura:
 
-- **Vanna** — sensibilité du delta à la volatilité implicite. Quand l'IV se
-  détend, les teneurs de marché doivent racheter du delta : c'est la mécanique
-  des hausses lentes sans catalyseur apparent.
-- **Charm** — décroissance du delta avec le **temps qui passe**. Ce flux est
-  purement mécanique et donc prévisible ; il explique une partie des dérives de
-  fin de séance et des comportements de semaine d'expiration.
+- **Vanna** — sensibilidad del delta a la volatilidad implícita. Cuando la IV se
+  relaja, los creadores de mercado deben recomprar delta: es la mecánica
+  de las subidas lentas sin catalizador aparente.
+- **Charm** — decrecimiento del delta con el **paso del tiempo**. Este flujo es
+  puramente mecánico y por tanto predecible; explica una parte de las derivas de
+  fin de sesión y de los comportamientos de semana de vencimiento.
 
-### Le flux delta
+### El flujo delta
 
-Une estimation du delta échangé, minute par minute, obtenue en multipliant la
-variation de volume de chaque contrat par son delta.
+Una estimación del delta intercambiado, minuto por minuto, obtenida multiplicando la
+variación de volumen de cada contrato por su delta.
 
-**Sa limite doit être comprise** : ce feed ne dit pas si une transaction a été
-initiée à l'achat ou à la vente. C'est donc une mesure de *pression pondérée
-par le delta*, pas un véritable flux d'ordres signé. Elle indique l'intensité
-et la concentration, pas la direction agressive.
-
----
-
-## Options avancées (facultatives, payantes)
-
-Le dashboard fonctionne intégralement sans rien de ce qui suit.
-
-### Historique via Databento
-
-Permet de pré-remplir plusieurs mois d'historique quotidien (GEX net, Gamma
-Flip) et de récupérer le flux intraday de séances passées.
-
-Facturation à la donnée téléchargée. Le script affiche **un devis avant tout
-téléchargement** et refuse de dépasser un plafond que tu fixes
-(`--max-cost`). Les fichiers bruts sont conservés localement : relancer ne
-refacture jamais ce qui a déjà été récupéré.
-
-Nécessite un compte Databento et la variable d'environnement
-`DATABENTO_API_KEY` (voir `.env.example`).
-
-À savoir : les données de la séance la plus récente restent sous licence
-« temps réel » pendant environ un jour ouvré. Une erreur de licence sur la
-veille est normale — il suffit d'attendre.
-
-### Temps réel via un compte courtier (gratuit avec le compte)
-
-Un compte courtier donnant accès à dxFeed — le dashboard est écrit pour
-tastytrade, qui inclut ces données sans supplément — fait passer en direct :
-
-- le **spot** des sous-jacents et des futures ;
-- le **GEX net recalculé à ce spot**, donc la distance au Gamma Flip et la
-  lecture du régime, qui se périment en quelques minutes ;
-- l'enregistrement de **bougies à la minute**, et la récupération de plusieurs
-  semaines d'**historique** en une passe.
-
-**Les chaînes d'options restent délayées** : elles continuent de venir de CBOE.
-Les murs de gamma et le Gamma Flip ne bougent pas davantage pour autant,
-puisqu'ils reposent sur l'open interest publié une fois par jour.
-
-Mise en place : créer une application OAuth depuis les paramètres du compte,
-lancer `python -m gex.tt_auth` pour obtenir un jeton, puis renseigner
-`TASTYTRADE_CLIENT_ID`, `TASTYTRADE_CLIENT_SECRET` et `TT_REFRESH` en variables
-d'environnement — jamais dans un fichier du dépôt. Sans ces variables, le
-module reste inerte et rien ne change.
-
-Ouvrir un compte de courtage est une démarche personnelle et engageante ; le
-dashboard fonctionne parfaitement sans, et ceci n'est pas une recommandation.
-
-**Ces données ne sont jamais redistribuables** : elles restent sur l'instance
-locale de leur titulaire. Le programme applique la règle par construction —
-provenance marquée à l'écriture, et export limité aux seules données CBOE.
+**Su limitación debe entenderse**: este feed no dice si una transacción fue
+iniciada como compra o como venta. Es por tanto una medida de *presión ponderada
+por el delta*, no un verdadero flujo de órdenes firmado. Indica la intensidad
+y la concentración, no la dirección agresiva.
 
 ---
 
-## Limites connues
+## Opciones Avanzadas (opcionales, de pago)
 
-- **Délai de 15 minutes** sur la source gratuite. Outil de lecture de
-  structure, jamais d'exécution.
-- **L'open interest est quotidien.** Aucun fournisseur, gratuit ou payant, n'y
-  change quoi que ce soit : c'est l'OCC qui le publie.
-- **Le sens des transactions n'est pas observable** dans le flux gratuit (voir
-  la section sur le flux delta).
-- **Hypothèse de positionnement des teneurs de marché.** Comme tous les outils
-  de ce type, le calcul suppose que les dealers sont longs de calls et courts
-  de puts. C'est une convention répandue et utile, pas une vérité mesurée.
-- **L'endpoint CBOE n'est pas contractuel** : son format peut changer sans
-  préavis. L'ingestion est isolée pour pouvoir brancher une autre source.
+El dashboard funciona íntegramente sin nada de lo que sigue.
+
+### Historial vía Databento
+
+Permite pre-rellenar varios meses de historial diario (GEX neto, Gamma
+Flip) y recuperar el flujo intradía de sesiones pasadas.
+
+Facturación por dato descargado. El script muestra **un presupuesto antes de cualquier
+descarga** y se niega a superar un tope que tú fijas
+(`--max-cost`). Los archivos brutos se conservan localmente: relanzar nunca
+refactura lo que ya fue recuperado.
+
+Requiere una cuenta Databento y la variable de entorno
+`DATABENTO_API_KEY` (ver `.env.example`).
+
+A tener en cuenta: los datos de la sesión más reciente permanecen bajo licencia
+«tiempo real» durante aproximadamente un día hábil. Un error de licencia sobre la
+víspera es normal — basta con esperar.
+
+### Tiempo real vía cuenta de broker (gratuito con la cuenta)
+
+Una cuenta de broker que dé acceso a dxFeed — el dashboard está escrito para
+tastytrade, que incluye estos datos sin cargo — pasa a directo:
+
+- el **spot** de los subyacentes y de los futuros;
+- el **GEX neto recalculado a ese spot**, por tanto la distancia al Gamma Flip y la
+  lectura del régimen, que se vencen en pocos minutos;
+- el registro de **velas al minuto**, y la recuperación de varias
+  semanas de **historial** de una sola vez.
+
+**Las cadenas de opciones siguen retrasadas**: continúan viniendo de CBOE.
+Los muros de gamma y el Gamma Flip no se mueven más por ello,
+ya que se basan en el open interest publicado una vez al día.
+
+Configuración: crear una aplicación OAuth desde la configuración de la cuenta,
+ejecutar `python -m gex.tt_auth` para obtener un token, luego configurar
+`TASTYTRADE_CLIENT_ID`, `TASTYTRADE_CLIENT_SECRET` y `TT_REFRESH` como variables
+de entorno — nunca en un archivo del repositorio. Sin estas variables, el
+módulo permanece inactivo y nada cambia.
+
+Abrir una cuenta de broker es una gestión personal y comprometedora; el
+dashboard funciona perfectamente sin ella, y esto no es una recomendación.
+
+**Estos datos nunca son redistribuibles**: permanecen en la instancia
+local de su titular. El programa aplica la regla por construcción —
+procedencia marcada al escribir, y exportación limitada solo a datos CBOE.
 
 ---
 
-## Avertissement
+## Limitaciones Conocidas
 
-Cet outil sert **exclusivement à l'analyse**. Il ne passe aucun ordre, ne se
-connecte à aucun compte de trading, et ne constitue ni un conseil en
-investissement ni une recommandation. Les calculs reposent sur des conventions
-publiques et des hypothèses explicitées ci-dessus, susceptibles d'être fausses.
+- **Retraso de 15 minutos** en la fuente gratuita. Herramienta de lectura de
+  estructura, nunca de ejecución.
+- **El open interest es diario.** Ningún proveedor, gratuito o de pago, cambia
+  eso: es la OCC quien lo publica.
+- **El lado de las transacciones no es observable** en el flujo gratuito (ver
+  la sección sobre el flujo delta).
+- **Hipótesis de posicionamiento de los creadores de mercado.** Como todas las herramientas
+  de este tipo, el cálculo supone que los dealers están largos de calls y cortos
+  de puts. Es una convención extendida y útil, no una verdad medida.
+- **El endpoint CBOE no es contractual**: su formato puede cambiar sin
+  previo aviso. La ingesta está aislada para poder conectar otra fuente.
 
-Distribué sous [licence MIT](LICENSE), sans aucune garantie.
+---
+
+## Aviso Legal
+
+Esta herramienta sirve **exclusivamente para el análisis**. No envía ninguna orden, no se
+conecta a ninguna cuenta de trading, y no constituye ni asesoramiento de
+inversión ni una recomendación. Los cálculos se basan en convenciones
+públicas e hipótesis explicadas arriba, susceptibles de ser incorrectas.
+
+Distribuido bajo [licencia MIT](LICENSE), sin ninguna garantía.
